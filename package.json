@@ -5,12 +5,15 @@
     "type": "module",
     "scripts": {
         "dev":"node --watch server.js",
-        "start": "node server.js"
+        "start": "node server.js",
+        "db:check":"node --env-file=.env scripts/check-db.js",
+        "db:order":"node --env-file=.env scripts/create-order.js"
     },
     "engines": {
         "node": ">=22"
     },
     "dependencies": {
-        "express": "^5.1.0"
+        "express": "^5.1.0",
+        "pg": "^8.16.3"
     }
 }

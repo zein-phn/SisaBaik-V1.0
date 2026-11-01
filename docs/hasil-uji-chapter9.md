@@ -82,28 +82,6 @@
 
 ---
 
-## 5. Bukti Tangkapan Layar (Screenshots)
-
-### 1. Katalog Pembeli Utama
-![Katalog Pembeli](./screenshots/katalog.png)
-
-### 2. Pencarian Kosong (Empty State)
-![Empty State](./screenshots/empty-state.png)
-
-### 3. Form Validasi Gagal (Form Invalid)
-![Form Invalid](./screenshots/form-invalid.png)
-
-### 4. Form Penambahan Valid (Form Valid)
-![Form Valid](./screenshots/form-valid.png)
-
-### 5. Tampilan Seluler / Mobile (375px / 768px)
-![Tampilan Mobile](./screenshots/tampilan-mobile.png)
-
-### 6. Hasil Build Terminal (`npm run build`)
-![Terminal Build](./screenshots/terminal-build.png)
-
----
-
-## 6. Pernyataan Batas Keamanan & Data
+## 5. Pernyataan Batas Keamanan & Data
 * Pengujian ini berjalan penuh di browser menggunakan fixture memori (`penawaran-latihan.js`).
 * Laporan ini **tidak memuat** variabel lingkungan `.env`, kata sandi akun, hash password, token JWT, `JWT_SECRET`, atau data pribadi nyata.

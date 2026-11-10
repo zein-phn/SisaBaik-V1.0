@@ -72,7 +72,7 @@ export function loginValid(body) {
   };
 }
 
-export function penawaranSesiValid(body, pengguna) {
+export function penawaranSesiValid(body, pengguna, mengedit = false) {
   objekValid(body, [
     "nama",
     "kategori",
@@ -82,8 +82,49 @@ export function penawaranSesiValid(body, pengguna) {
     "satuan",
     "status",
     "berakhirPada",
+    "foto",
+    "versi",
   ]);
-  return penawaranValid({ ...body, penyediaId: pengguna.penyediaId });
+  const { foto, versi, ...isian } = body;
+  if (!mengedit && versi !== undefined)
+    salah("versi hanya digunakan untuk mengedit.");
+  if (
+    mengedit &&
+    (typeof versi !== "string" ||
+      !/^(0|[1-9][0-9]{0,18})$/.test(versi) ||
+      BigInt(versi) > 9223372036854775807n)
+  ) {
+    salah("versi penawaran wajib dikirim dari data terbaru.");
+  }
+  return {
+    ...penawaranValid({ ...isian, penyediaId: pengguna.penyediaId }),
+    foto,
+    versi,
+  };
+}
+
+export function aksiPesananValid(body) {
+  objekValid(body, ["aksi", "alasan", "pembayaranDiterima"]);
+  if (
+    !["konfirmasi", "siap", "selesai", "batal", "tolak"].includes(body.aksi)
+  ) {
+    salah("Aksi pesanan tidak dikenal.");
+  }
+  const batal = ["batal", "tolak"].includes(body.aksi);
+  const alasan = batal ? teksValid(body.alasan, "alasan", 3, 500) : null;
+  if (!batal && body.alasan !== undefined)
+    salah("alasan hanya untuk pembatalan atau penolakan.");
+  if (
+    body.pembayaranDiterima !== undefined &&
+    (body.aksi !== "selesai" || typeof body.pembayaranDiterima !== "boolean")
+  ) {
+    salah("pembayaranDiterima hanya berupa boolean pada penyelesaian.");
+  }
+  return {
+    aksi: body.aksi,
+    alasan,
+    pembayaranDiterima: body.pembayaranDiterima === true,
+  };
 }
 
 export function pesananSesiValid(body, pengguna) {

@@ -1,6 +1,5 @@
 <script setup>
 const props = defineProps({ nama: { type: String, required: true } });
-
 const bentuk = {
   panah: ["M5 12h14", "m13 6 6 6-6 6"],
   kiri: ["M19 12H5", "m11 6-6 6 6 6"],

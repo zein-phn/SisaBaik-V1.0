@@ -18,7 +18,10 @@ export function idValid(nilai, nama = "id") {
     salah(`${nama} wajib berupa ID positif.`);
   }
   const teks = String(nilai);
-  if (!/^[1-9][0-9]{0,18}$/.test(teks) || BigInt(teks) > 9223372036854775807n) {
+  if (
+    !/^[1-9][0-9]{0,18}$/.test(teks) ||
+    BigInt(teks) > 9223372036854775807n
+  ) {
     salah(`${nama} tidak valid.`);
   }
   return teks;
@@ -75,7 +78,10 @@ export function filterValid(query) {
   const q = teksValid(query.q ?? "", "q", 0, 100);
   const kategori = teksValid(query.kategori ?? "", "kategori", 0, 40);
   const status = teksValid(query.status ?? "", "status", 0, 20);
-  if (status && !["draft", "aktif", "habis", "kedaluwarsa"].includes(status)) {
+  if (
+    status &&
+    !["draft", "aktif", "habis", "kedaluwarsa"].includes(status)
+  ) {
     salah("status tidak dikenal.");
   }
   const tersedia = query.tersedia ?? "false";
@@ -101,8 +107,18 @@ export function penawaranValid(body) {
     penyediaId: idValid(body.penyediaId, "penyediaId"),
     nama: teksValid(body.nama, "nama", 3, 120),
     kategori: teksValid(body.kategori, "kategori", 1, 40),
-    hargaNormal: angkaValid(body.hargaNormal, "hargaNormal", 1, 999999999999),
-    hargaPenawaran: angkaValid(body.hargaPenawaran, "hargaPenawaran", 0, 999999999999),
+    hargaNormal: angkaValid(
+      body.hargaNormal,
+      "hargaNormal",
+      1,
+      999999999999,
+    ),
+    hargaPenawaran: angkaValid(
+      body.hargaPenawaran,
+      "hargaPenawaran",
+      0,
+      999999999999,
+    ),
     stok: angkaValid(body.stok, "stok", 0, 2147483647),
     satuan: teksValid(body.satuan, "satuan", 1, 20),
     status: teksValid(body.status, "status", 1, 20),
@@ -116,7 +132,7 @@ export function penawaranValid(body) {
   const waktu = teksValid(body.berakhirPada, "berakhirPada", 20, 35);
   const polaWaktu = new RegExp(
     String.raw`^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}` +
-    String.raw`(\.\d{1,3})?(Z|[+-]\d{2}:\d{2})$`,
+      String.raw`(\.\d{1,3})?(Z|[+-]\d{2}:\d{2})$`,
   );
   if (!polaWaktu.test(waktu)) {
     salah("berakhirPada wajib ISO 8601 dengan zona waktu.");
@@ -124,8 +140,22 @@ export function penawaranValid(body) {
   const tahun = Number(waktu.slice(0, 4));
   const bulan = Number(waktu.slice(5, 7));
   const hari = Number(waktu.slice(8, 10));
-  const kabisat = tahun % 4 === 0 && (tahun % 100 !== 0 || tahun % 400 === 0);
-  const hariBulan = [31, kabisat ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  const kabisat =
+    tahun % 4 === 0 && (tahun % 100 !== 0 || tahun % 400 === 0);
+  const hariBulan = [
+    31,
+    kabisat ? 29 : 28,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31,
+  ];
   if (bulan < 1 || bulan > 12 || hari < 1 || hari > hariBulan[bulan - 1]) {
     salah("Tanggal kalender tidak valid.");
   }
@@ -149,7 +179,11 @@ export function pesananValid(body) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailPembeli)) {
     salah("Format emailPembeli tidak valid.");
   }
-  if (!Array.isArray(body.items) || body.items.length < 1 || body.items.length > 10) {
+  if (
+    !Array.isArray(body.items) ||
+    body.items.length < 1 ||
+    body.items.length > 10
+  ) {
     salah("items wajib array berisi 1-10 item.");
   }
   const unik = new Set();
@@ -161,6 +195,8 @@ export function pesananValid(body) {
     unik.add(penawaranId);
     return { penawaranId, kuantitas };
   });
-  items.sort((a, b) => (BigInt(a.penawaranId) < BigInt(b.penawaranId) ? -1 : 1));
+  items.sort((a, b) =>
+    BigInt(a.penawaranId) < BigInt(b.penawaranId) ? -1 : 1,
+  );
   return { emailPembeli, items };
 }
